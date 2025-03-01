@@ -4,9 +4,8 @@
  * Author: codingonion (coderonion@gmail.com)
  */
 
-include!("../include/include.rs");
+use hello_algo_rust::include::{print_util, ListNode};
 
-use list_node::ListNode;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -46,16 +45,10 @@ impl<T: Copy> LinkedListStack<T> {
     /* 出栈 */
     pub fn pop(&mut self) -> Option<T> {
         self.stack_peek.take().map(|old_head| {
-            match old_head.borrow_mut().next.take() {
-                Some(new_head) => {
-                    self.stack_peek = Some(new_head);
-                }
-                None => {
-                    self.stack_peek = None;
-                }
-            }
+            self.stack_peek = old_head.borrow_mut().next.take();
             self.stk_size -= 1;
-            Rc::try_unwrap(old_head).ok().unwrap().into_inner().val
+
+            old_head.borrow().val
         })
     }
 
